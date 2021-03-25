@@ -1,0 +1,5 @@
+setx TOKEN 87c8311641f632545f4c6c8a97ba628f2f7099f6
+setx TASKCONTENT "Buy Beers"
+setx baseURL "https://api.todoist.com"
+setx complementaryURL "/rest/v1/tasks"
+setx TASKCONTENTUPDATED "Be OOO the whole week"

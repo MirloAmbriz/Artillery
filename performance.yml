@@ -1,0 +1,45 @@
+config:
+  target: "{{ $processEnvironment.baseURL }}"
+  phases:
+    - duration: 1
+      arrivalRate: 1
+      name: "Phase 1"
+  defaults:
+   headers:
+     Authorization: Bearer {{ $processEnvironment.TOKEN }}
+     Content-type: application/json
+scenarios:
+  - flow:
+  ####### Get active tasks #######    
+      - get:
+         url: "{{ $processEnvironment.complementaryURL }}"
+      - log: "token is: {{ $processEnvironment.TOKEN }}"
+  ####### Create a new task ####### 
+      - post:
+         url: "{{ $processEnvironment.complementaryURL }}"
+         json:
+          content: "{{ $processEnvironment.TASKCONTENT }}"
+         capture:
+          json: "$.id"
+          as: "id"
+      - log: "id is {{ id }}"
+      - log: "task content is: {{ $processEnvironment.TASKCONTENT }}"
+  ####### Get an active task #######      
+      - get:
+          url: "{{ $processEnvironment.complementaryURL }}/{{ id }}"
+      - log: "complementary URL is: {{ $processEnvironment.complementaryURL }}"
+  ####### Update a task #######
+      - post:
+          url: "{{ $processEnvironment.complementaryURL }}/{{ id }}"
+          json:
+           content: "{{ $processEnvironment.TASKCONTENTUPDATED }}"
+      - log: "task content updated is: {{ $processEnvironment.TASKCONTENTUPDATED }}"
+  ####### Mark task as complete #######
+      - post:
+          url: "{{ $processEnvironment.complementaryURL }}/{{ id }}/close"
+  ####### Reopen a task #######
+      - post:
+          url: "{{ $processEnvironment.complementaryURL }}/{{ id }}/reopen"
+  ####### Delete a task #######
+      - delete:
+          url: "{{ $processEnvironment.complementaryURL }}/{{ id }}" 
